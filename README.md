@@ -3,6 +3,7 @@
 This is the HMPPS Interventions UI
 
 [![Known Vulnerabilities](https://snyk.io/test/github/ministryofjustice/hmpps-interventions-ui/badge.svg)](https://snyk.io/test/github/ministryofjustice/hmpps-interventions-ui)
+[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-interventions-ui/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-interventions-ui/tree/main)
 
 ## Quickstart 
 
