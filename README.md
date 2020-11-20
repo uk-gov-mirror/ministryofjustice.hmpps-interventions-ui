@@ -1,5 +1,9 @@
 # HMPPS Interventions UI
 
+This is the HMPPS Interventions UI
+
+[![Known Vulnerabilities](https://snyk.io/test/github/ministryofjustice/hmpps-interventions-ui/badge.svg)](https://snyk.io/test/github/ministryofjustice/hmpps-interventions-ui)
+
 ## Quickstart 
 
 ### Requirements 
