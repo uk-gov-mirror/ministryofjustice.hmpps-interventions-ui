@@ -11,6 +11,7 @@ import standardRouter from '../standardRouter'
 import * as auth from '../../authentication/auth'
 import { user, MockUserService } from './mocks/mockUserService'
 import MockCommunityApiService from './mocks/mockCommunityApiService'
+import InterventionsService from '../../services/interventionsService'
 
 function appSetup(route: Router, production: boolean): Express {
   const app = express()
@@ -38,5 +39,8 @@ function appSetup(route: Router, production: boolean): Express {
 
 export default function appWithAllRoutes({ production = false }: { production?: boolean }): Express {
   auth.default.authenticationMiddleware = () => (req, res, next) => next()
-  return appSetup(allRoutes(standardRouter(new MockUserService()), new MockCommunityApiService()), production)
+  return appSetup(
+    allRoutes(standardRouter(new MockUserService()), new MockCommunityApiService(), {} as InterventionsService),
+    production
+  )
 }
