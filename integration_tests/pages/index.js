@@ -1,8 +1,8 @@
-const page = require('./page')
+const createPage = require('./page')
 
-const indexPage = () =>
-  page('This site is under construction...', {
+const createIndexPage = () =>
+  createPage('This site is under construction...', {
     headerUserName: () => cy.get('[data-qa=header-user-name]'),
   })
 
-module.exports = { verifyOnPage: indexPage }
+module.exports = createIndexPage

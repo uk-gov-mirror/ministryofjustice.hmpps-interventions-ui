@@ -1,4 +1,4 @@
-const IndexPage = require('../pages/index')
+const createIndexPage = require('../pages/index')
 const AuthLoginPage = require('../pages/authLogin')
 
 context('Login', () => {
@@ -14,12 +14,17 @@ context('Login', () => {
   })
   it('User name visible in header', () => {
     cy.login()
-    const landingPage = IndexPage.verifyOnPage()
+    const landingPage = createIndexPage()
+
+    landingPage.checkOnPage()
     landingPage.headerUserName().should('contain.text', 'J. Smith')
   })
   it('User can log out', () => {
     cy.login()
-    const landingPage = IndexPage.verifyOnPage()
+    const landingPage = createIndexPage()
+
+    landingPage.checkOnPage()
+
     landingPage.logout().click()
     AuthLoginPage.verifyOnPage()
   })
