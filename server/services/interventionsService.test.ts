@@ -147,11 +147,11 @@ pactWith({ consumer: 'Interventions UI', provider: 'Interventions Service' }, pr
   describe('getComplexityLevels', () => {
     beforeEach(async () => {
       await provider.addInteraction({
-        state: 'a service category with ID b5a51aa4-64e2-4df5-aff8-9f7642a0f09c exists',
+        state: 'a service category with ID 428ee70f-3001-4399-95a6-ad25eaaede16 exists',
         uponReceiving: 'a GET request to fetch the service category’s complexity levels',
         withRequest: {
           method: 'GET',
-          path: '/service-categories/b5a51aa4-64e2-4df5-aff8-9f7642a0f09c/complexity-levels',
+          path: '/service-categories/428ee70f-3001-4399-95a6-ad25eaaede16/complexity-levels',
           headers: {
             Accept: 'application/json',
             Authorization: 'Bearer mockedToken',
@@ -187,7 +187,7 @@ pactWith({ consumer: 'Interventions UI', provider: 'Interventions Service' }, pr
     })
 
     it('returns a list of complexity levels', async () => {
-      const complexityLevels = await interventionsService.getComplexityLevels('b5a51aa4-64e2-4df5-aff8-9f7642a0f09c')
+      const complexityLevels = await interventionsService.getComplexityLevels('428ee70f-3001-4399-95a6-ad25eaaede16')
 
       expect(complexityLevels).toEqual([
         {
