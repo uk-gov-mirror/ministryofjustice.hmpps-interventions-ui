@@ -32,8 +32,9 @@ export default class ReferralsController {
 
   async viewComplexityLevel(req: Request, res: Response): Promise<void> {
     const referral = await this.interventionsService.getDraftReferral(req.params.id)
+    const complexityLevels = await this.interventionsService.getComplexityLevels(referral.serviceCategory.id)
 
-    const presenter = new ComplexityLevelPresenter(referral, 'Something is wrong')
+    const presenter = new ComplexityLevelPresenter(referral, complexityLevels, 'Something is wrong')
     const view = new ComplexityLevelView(presenter)
 
     res.render(...view.renderArgs)
