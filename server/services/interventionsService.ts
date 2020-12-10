@@ -14,6 +14,12 @@ export interface ServiceCategory {
   name: string
 }
 
+export interface ComplexityLevel {
+  id: string
+  title: string
+  description: string
+}
+
 export default class InterventionsService {
   constructor(private readonly config: ApiConfig, private readonly hmppsAuthClient: HmppsAuthClient) {}
 
@@ -51,5 +57,14 @@ export default class InterventionsService {
       headers: { Accept: 'application/json' },
       data: patch,
     })) as DraftReferral
+  }
+
+  async getComplexityLevels(serviceCategoryId: string): Promise<ComplexityLevel[]> {
+    const restClient = await this.createRestClient()
+
+    return (await restClient.get({
+      path: `/service-categories/${serviceCategoryId}/complexity-levels`,
+      headers: { Accept: 'application/json' },
+    })) as ComplexityLevel[]
   }
 }
