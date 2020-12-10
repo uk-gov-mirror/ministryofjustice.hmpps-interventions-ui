@@ -5,6 +5,8 @@ import CompletionDeadlinePresenter from './completionDeadlinePresenter'
 import ReferralFormView from './referralFormView'
 import CompletionDeadlineView from './completionDeadlineView'
 import CompletionDeadlineForm, { CompletionDeadlineErrors } from './completionDeadlineForm'
+import ComplexityLevelView from './complexityLevelView'
+import ComplexityLevelPresenter from './complexityLevelPresenter'
 
 export default class ReferralsController {
   constructor(private readonly interventionsService: InterventionsService) {}
@@ -24,6 +26,15 @@ export default class ReferralsController {
 
     const presenter = new ReferralFormPresenter(referral)
     const view = new ReferralFormView(presenter)
+
+    res.render(...view.renderArgs)
+  }
+
+  async viewComplexityLevel(req: Request, res: Response): Promise<void> {
+    const referral = await this.interventionsService.getDraftReferral(req.params.id)
+
+    const presenter = new ComplexityLevelPresenter(referral, 'Something is wrong')
+    const view = new ComplexityLevelView(presenter)
 
     res.render(...view.renderArgs)
   }
