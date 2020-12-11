@@ -7,7 +7,11 @@ describe('CompletionDeadlinePresenter', () => {
         const presenter = new CompletionDeadlinePresenter({
           id: '1',
           completionDeadline: null,
-          serviceCategory: { id: 'b33c19d1-7414-4014-b543-e543e59c5b39', name: 'social inclusion' },
+          serviceCategory: {
+            id: 'b33c19d1-7414-4014-b543-e543e59c5b39',
+            name: 'social inclusion',
+          },
+          complexityLevelId: null,
         })
 
         expect(presenter.day).toBe('')
@@ -21,7 +25,11 @@ describe('CompletionDeadlinePresenter', () => {
         const presenter = new CompletionDeadlinePresenter({
           id: '1',
           completionDeadline: '2021-09-12',
-          serviceCategory: { id: 'b33c19d1-7414-4014-b543-e543e59c5b39', name: 'social inclusion' },
+          serviceCategory: {
+            id: 'b33c19d1-7414-4014-b543-e543e59c5b39',
+            name: 'social inclusion',
+          },
+          complexityLevelId: null,
         })
 
         expect(presenter.day).toBe('12')
@@ -36,7 +44,11 @@ describe('CompletionDeadlinePresenter', () => {
           {
             id: '1',
             completionDeadline: '2021-09-12',
-            serviceCategory: { id: 'b33c19d1-7414-4014-b543-e543e59c5b39', name: 'social inclusion' },
+            serviceCategory: {
+              id: 'b33c19d1-7414-4014-b543-e543e59c5b39',
+              name: 'social inclusion',
+            },
+            complexityLevelId: null,
           },
           null,
           {
@@ -58,7 +70,11 @@ describe('CompletionDeadlinePresenter', () => {
         const presenter = new CompletionDeadlinePresenter({
           id: '1',
           completionDeadline: null,
-          serviceCategory: { id: 'b33c19d1-7414-4014-b543-e543e59c5b39', name: 'social inclusion' },
+          serviceCategory: {
+            id: 'b33c19d1-7414-4014-b543-e543e59c5b39',
+            name: 'social inclusion',
+          },
+          complexityLevelId: null,
         })
 
         expect(presenter.errorMessage).toBeNull()
@@ -73,7 +89,11 @@ describe('CompletionDeadlinePresenter', () => {
           {
             id: '1',
             completionDeadline: null,
-            serviceCategory: { id: 'b33c19d1-7414-4014-b543-e543e59c5b39', name: 'social inclusion' },
+            serviceCategory: {
+              id: 'b33c19d1-7414-4014-b543-e543e59c5b39',
+              name: 'social inclusion',
+            },
+            complexityLevelId: null,
           },
           {
             firstErroredField: 'month',
@@ -96,7 +116,11 @@ describe('CompletionDeadlinePresenter', () => {
       const presenter = new CompletionDeadlinePresenter({
         id: '1',
         completionDeadline: null,
-        serviceCategory: { id: 'b33c19d1-7414-4014-b543-e543e59c5b39', name: 'social inclusion' },
+        serviceCategory: {
+          id: 'b33c19d1-7414-4014-b543-e543e59c5b39',
+          name: 'social inclusion',
+        },
+        complexityLevelId: null,
       })
 
       expect(presenter.title).toEqual('What date does the social inclusion service need to be completed by?')
@@ -108,7 +132,11 @@ describe('CompletionDeadlinePresenter', () => {
       const presenter = new CompletionDeadlinePresenter({
         id: '1',
         completionDeadline: null,
-        serviceCategory: { id: 'b33c19d1-7414-4014-b543-e543e59c5b39', name: 'social inclusion' },
+        serviceCategory: {
+          id: 'b33c19d1-7414-4014-b543-e543e59c5b39',
+          name: 'social inclusion',
+        },
+        complexityLevelId: null,
       })
 
       expect(presenter.hint).toEqual('For example, 27 10 2021')
