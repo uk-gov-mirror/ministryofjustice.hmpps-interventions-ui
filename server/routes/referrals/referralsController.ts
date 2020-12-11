@@ -6,7 +6,8 @@ import ReferralFormView from './referralFormView'
 import CompletionDeadlineView from './completionDeadlineView'
 import CompletionDeadlineForm, { CompletionDeadlineErrors } from './completionDeadlineForm'
 import ComplexityLevelView from './complexityLevelView'
-import ComplexityLevelPresenter from './complexityLevelPresenter'
+import ComplexityLevelPresenter, { ComplexityLevelError } from './complexityLevelPresenter'
+import ComplexityLevelForm from './complexityLevelForm'
 
 export default class ReferralsController {
   constructor(private readonly interventionsService: InterventionsService) {}
@@ -34,10 +35,41 @@ export default class ReferralsController {
     const referral = await this.interventionsService.getDraftReferral(req.params.id)
     const complexityLevels = await this.interventionsService.getComplexityLevels(referral.serviceCategory.id)
 
-    const presenter = new ComplexityLevelPresenter(referral, complexityLevels, 'Something is wrong')
+    const presenter = new ComplexityLevelPresenter(referral, complexityLevels)
     const view = new ComplexityLevelView(presenter)
 
     res.render(...view.renderArgs)
+  }
+
+  async updateComplexityLevel(req: Request, res: Response): Promise<void> {
+    const form = await ComplexityLevelForm.createForm(req)
+
+    let error: ComplexityLevelError | null
+
+    if (form.isValid) {
+      try {
+        await this.interventionsService.patchDraftReferral(req.params.id, form.paramsForUpdate)
+      } catch (e) {
+        error = {
+          message: e.message,
+        }
+      }
+    } else {
+      error = form.error
+    }
+
+    if (!error) {
+      res.redirect(`/referrals/${req.params.id}/form`)
+    } else {
+      const referral = await this.interventionsService.getDraftReferral(req.params.id)
+      const complexityLevels = await this.interventionsService.getComplexityLevels(referral.serviceCategory.id)
+
+      const presenter = new ComplexityLevelPresenter(referral, complexityLevels, error)
+      const view = new ComplexityLevelView(presenter)
+
+      res.status(400)
+      res.render(...view.renderArgs)
+    }
   }
 
   async viewCompletionDeadline(req: Request, res: Response): Promise<void> {

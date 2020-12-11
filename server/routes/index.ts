@@ -32,6 +32,8 @@ export default function routes(router: Router, services: Services): Router {
   post('/referrals', (req, res) => referralsController.createReferral(req, res))
   get('/referrals/:id/form', (req, res) => referralsController.viewReferralForm(req, res))
   get('/referrals/:id/complexity-level', (req, res) => referralsController.viewComplexityLevel(req, res))
+  // TODO: should this (and the one below be a patch, rather than post?)
+  post('/referrals/:id/complexity-level', (req, res) => referralsController.updateComplexityLevel(req, res))
   get('/referrals/:id/completion-deadline', (req, res) => referralsController.viewCompletionDeadline(req, res))
   post('/referrals/:id/completion-deadline', (req, res) => referralsController.updateCompletionDeadline(req, res))
 
