@@ -4,7 +4,7 @@ export default class ComplexityLevelView {
   constructor(readonly presenter: ComplexityLevelPresenter) {}
 
   get radioButtonArgs(): Record<string, unknown> {
-    const errorMessage = this.presenter.errorMessage ? { text: this.presenter.errorMessage } : null
+    const errorMessage = this.presenter.error ? { text: this.presenter.error.message } : null
 
     return {
       classes: 'govuk-radios',
@@ -31,7 +31,7 @@ export default class ComplexityLevelView {
   }
 
   get errorSummaryArgs(): Record<string, unknown> | null {
-    if (!this.presenter.errorMessage) {
+    if (!this.presenter.error) {
       return null
     }
 
@@ -39,7 +39,7 @@ export default class ComplexityLevelView {
       titleText: 'There is a problem',
       errorList: [
         {
-          text: this.presenter.errorMessage,
+          text: this.presenter.error.message,
           href: '#complexity-level',
         },
       ],

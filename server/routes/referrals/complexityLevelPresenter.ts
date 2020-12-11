@@ -1,10 +1,14 @@
 import { ComplexityLevel, DraftReferral } from '../../services/interventionsService'
 
+export interface ComplexityLevelError {
+  message: string
+}
+
 export default class ComplexityLevelPresenter {
   constructor(
     private readonly referral: DraftReferral,
     private readonly complexityLevels: ComplexityLevel[],
-    readonly errorMessage: string | null
+    readonly error?: ComplexityLevelError | null
   ) {}
 
   readonly complexityDescriptions: {
