@@ -60,7 +60,7 @@ describe(ComplexityLevelForm, () => {
         body: { 'complexity-level': '43557c7a-c286-49c2-a994-d0a821295c7a' },
       } as Request)
 
-      expect(form.paramsForUpdate).toEqual({ 'complexity-level-id': '43557c7a-c286-49c2-a994-d0a821295c7a' })
+      expect(form.paramsForUpdate).toEqual({ complexityLevelId: '43557c7a-c286-49c2-a994-d0a821295c7a' })
     })
   })
 })
