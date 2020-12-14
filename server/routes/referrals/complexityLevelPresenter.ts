@@ -8,7 +8,8 @@ export default class ComplexityLevelPresenter {
   constructor(
     private readonly referral: DraftReferral,
     private readonly complexityLevels: ComplexityLevel[],
-    readonly error?: ComplexityLevelError | null
+    readonly error?: ComplexityLevelError | null,
+    private readonly userInputData: Record<string, unknown> | null = null
   ) {}
 
   readonly complexityDescriptions: {
@@ -21,9 +22,13 @@ export default class ComplexityLevelPresenter {
       title: complexityLevel.title,
       value: complexityLevel.id,
       hint: complexityLevel.description,
-      checked: this.referral.complexityLevelId === complexityLevel.id,
+      checked: this.selectedComplexityLevelId === complexityLevel.id,
     }
   })
+
+  private get selectedComplexityLevelId() {
+    return this.userInputData ? this.userInputData['complexity-level'] : this.referral.complexityLevelId
+  }
 
   readonly title = `What is the complexity level for the ${this.referral.serviceCategory.name} service?`
 }
