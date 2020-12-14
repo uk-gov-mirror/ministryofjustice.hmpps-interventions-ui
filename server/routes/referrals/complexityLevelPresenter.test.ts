@@ -59,4 +59,12 @@ describe('ComplexityLevelPresenter', () => {
       expect(expectedHints).toEqual(complexityLevelIds)
     })
   })
+
+  describe('title', () => {
+    it('returns a title', () => {
+      const presenter = new ComplexityLevelPresenter(draftReferral, socialInclusionComplexityLevels)
+
+      expect(presenter.title).toEqual('What is the complexity level for the social inclusion service?')
+    })
+  })
 })
