@@ -16,7 +16,7 @@ export default class ComplexityLevelForm {
   }
 
   get isValid(): boolean {
-    return this.request.body['complexity-level'] !== null
+    return this.request.body['complexity-level'] != null
   }
 
   get error(): ComplexityLevelError | null {
