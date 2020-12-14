@@ -11,12 +11,12 @@ export default class ComplexityLevelForm {
 
   get paramsForUpdate(): Partial<DraftReferral> {
     return {
-      complexityLevelId: this.request.body['complexity-level'],
+      complexityLevelId: this.request.body['complexity-level-id'],
     }
   }
 
   get isValid(): boolean {
-    return this.request.body['complexity-level'] != null
+    return this.request.body['complexity-level-id'] != null
   }
 
   get error(): ComplexityLevelError | null {
