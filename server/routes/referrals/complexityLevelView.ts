@@ -25,6 +25,7 @@ export default class ComplexityLevelView {
           hint: {
             text: complexityDescription.hint,
           },
+          checked: complexityDescription.checked,
         }
       }),
     }

@@ -15,8 +15,14 @@ export default class ComplexityLevelPresenter {
     title: string
     value: string
     hint: string
+    checked: boolean
   }[] = this.complexityLevels.map(complexityLevel => {
-    return { title: complexityLevel.title, value: complexityLevel.id, hint: complexityLevel.description }
+    return {
+      title: complexityLevel.title,
+      value: complexityLevel.id,
+      hint: complexityLevel.description,
+      checked: this.referral.complexityLevelId === complexityLevel.id,
+    }
   })
 
   readonly title = `What is the complexity level for the ${this.referral.serviceCategory.name} service?`

@@ -58,6 +58,15 @@ describe('ComplexityLevelPresenter', () => {
 
       expect(expectedHints).toEqual(complexityLevelIds)
     })
+
+    describe('when the referral already has a selected complexity level', () => {
+      it('sets checked to true for the referral’s selected complexity level', () => {
+        draftReferral.complexityLevelId = '110f2405-d944-4c15-836c-0c6684e2aa78'
+        const presenter = new ComplexityLevelPresenter(draftReferral, socialInclusionComplexityLevels)
+
+        expect(presenter.complexityDescriptions.map(description => description.checked)).toEqual([false, true, false])
+      })
+    })
   })
 
   describe('title', () => {
