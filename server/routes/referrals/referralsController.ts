@@ -30,6 +30,8 @@ import errorMessages from '../../utils/errorMessages'
 import logger from '../../../log'
 import CheckAnswersView from './checkAnswersView'
 import CheckAnswersPresenter from './checkAnswersPresenter'
+import ConfirmationView from './confirmationView'
+import ConfirmationPresenter from './confirmationPresenter'
 
 export default class ReferralsController {
   constructor(
@@ -484,5 +486,18 @@ export default class ReferralsController {
     const referral = await this.interventionsService.sendDraftReferral(res.locals.user.token, req.params.id)
 
     res.redirect(303, `/referrals/${referral.id}/confirmation`)
+  }
+
+  async viewConfirmation(req: Request, res: Response): Promise<void> {
+    const referral = await this.interventionsService.getSentReferral(res.locals.user.token, req.params.id)
+    const serviceProvider = await this.interventionsService.getServiceProvider(
+      res.locals.user.token,
+      referral.referral.serviceProviderId
+    )
+
+    const presenter = new ConfirmationPresenter(referral, serviceProvider)
+    const view = new ConfirmationView(presenter)
+
+    res.render(...view.renderArgs)
   }
 }
