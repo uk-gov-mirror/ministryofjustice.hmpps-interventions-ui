@@ -59,6 +59,14 @@ export default {
       },
       agent: new AgentConfig(),
     },
+    probationOffenderSearch: {
+      url: get('PROBATION_OFFENDER_SEARCH_URL', 'https://localhost:8093', requiredInProduction),
+      timeout: {
+        response: Number(get('PROBATION_OFFENDER_SEARCH_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('PROBATION_OFFENDER_SEARCH_TIMEOUT_DEADLINE', 10000)),
+      },
+      agent: new AgentConfig(),
+    },
     hmppsAuth: {
       url: get('HMPPS_AUTH_URL', 'http://localhost:8090/auth', requiredInProduction),
       timeout: {

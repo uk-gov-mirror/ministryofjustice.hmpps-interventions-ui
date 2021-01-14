@@ -37,5 +37,40 @@ services:
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=dev
 
+  probation-offender-search:
+    image: local/probation-offender-search
+    networks:
+      - hmpps
+    container_name: probation-offender-search
+    ports:
+      - '8093:8080'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/health']
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_PROFILES_ACTIVE=dev,interventions
+      # - COMMUNITY_ENDPOINT_URL="http://localhost:8091"
+
+  # required for probation offender search
+  localstack:
+    image: localstack/localstack:0.11.2
+    networks:
+      - hmpps
+    container_name: localstack
+    ports:
+      - '4566-4597:4566-4597'
+      - 8999:8080
+    environment:
+      - SERVICES=es
+      - ES_PORT_EXTERNAL=4571
+      - DEBUG=${DEBUG- }
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DEFAULT_REGION=eu-west-2
+    volumes:
+      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - $PWD/localstack:/docker-entrypoint-initaws.d
+
 networks:
   hmpps:
