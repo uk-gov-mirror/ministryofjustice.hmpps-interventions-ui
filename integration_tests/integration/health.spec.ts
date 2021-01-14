@@ -8,4 +8,10 @@ context('Healthcheck', () => {
   it('Health check page is visible', () => {
     cy.request('/health').its('body.healthy').should('equal', true)
   })
+
+  describe('foo', () => {
+    it('1 + 1', () => {
+      cy.request('/foo')
+    })
+  })
 })
