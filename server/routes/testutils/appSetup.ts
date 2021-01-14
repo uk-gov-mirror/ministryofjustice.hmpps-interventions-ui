@@ -12,6 +12,7 @@ import * as auth from '../../authentication/auth'
 import { user, MockUserService } from './mocks/mockUserService'
 import MockCommunityApiService from './mocks/mockCommunityApiService'
 import InterventionsService from '../../services/interventionsService'
+import MockProbationOffenderSearchService from './mocks/mockProbationOffenderSearchService'
 
 function appSetup(route: Router, production: boolean): Express {
   const app = express()
@@ -48,6 +49,7 @@ export default function appWithAllRoutes({
   return appSetup(
     allRoutes(standardRouter(new MockUserService()), {
       communityApiService: new MockCommunityApiService(),
+      probationOffenderSearchService: new MockProbationOffenderSearchService(),
       interventionsService: {} as InterventionsService,
       ...overrides,
     }),

@@ -3,6 +3,7 @@ import type { RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import CommunityApiService from '../services/communityApiService'
 import InterventionsService from '../services/interventionsService'
+import ProbationOffenderSearchService from '../services/probationOffenderSearchService'
 import IntegrationSamplesRoutes from './integrationSamples'
 import ReferralsController from './referrals/referralsController'
 
@@ -12,6 +13,7 @@ interface RouteProvider {
 
 export interface Services {
   communityApiService: CommunityApiService
+  probationOffenderSearchService: ProbationOffenderSearchService
   interventionsService: InterventionsService
 }
 
@@ -19,7 +21,7 @@ export default function routes(router: Router, services: Services): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
-  const integrationSamples: RouteProvider = IntegrationSamplesRoutes(services.communityApiService)
+  const integrationSamples: RouteProvider = IntegrationSamplesRoutes(services.probationOffenderSearchService)
   const referralsController = new ReferralsController(services.interventionsService)
 
   get('/', (req, res, next) => {
