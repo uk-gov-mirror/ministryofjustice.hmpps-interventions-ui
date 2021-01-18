@@ -25,9 +25,15 @@ import RarDaysView from './rarDaysView'
 import RarDaysPresenter from './rarDaysPresenter'
 import RarDaysForm from './rarDaysForm'
 import ReferralStartView from './referralStartView'
+import CommunityApiService from '../../services/communityApiService'
+import errorMessages from '../../utils/errorMessages'
+import logger from '../../../log'
 
 export default class ReferralsController {
-  constructor(private readonly interventionsService: InterventionsService) {}
+  constructor(
+    private readonly interventionsService: InterventionsService,
+    private readonly communityApiService: CommunityApiService
+  ) {}
 
   async startReferral(req: Request, res: Response): Promise<void> {
     const { token, userId } = res.locals.user
@@ -39,15 +45,67 @@ export default class ReferralsController {
   }
 
   async createReferral(req: Request, res: Response): Promise<void> {
-    const referral = await this.interventionsService.createDraftReferral(res.locals.user.token)
+    let error: FormValidationError | null = null
 
-    // fixme: this sets some static data for the new referral which will need to be
-    //  changed to allow these fields to be set properly
-    await this.interventionsService.patchDraftReferral(res.locals.user.token, referral.id, {
-      serviceCategoryId: '428ee70f-3001-4399-95a6-ad25eaaede16',
-    })
+    const crn = req.body['service-user-crn']
+    if (crn === null || crn === '') {
+      error = {
+        errors: [
+          {
+            formFields: ['service-user-crn'],
+            errorSummaryLinkedField: 'service-user-crn',
+            message: errorMessages.startReferral.crnEmpty,
+          },
+        ],
+      }
+    } else {
+      try {
+        await this.communityApiService.getOffenderByCRN(crn)
+      } catch (e) {
+        if (e.status === 404) {
+          error = {
+            errors: [
+              {
+                formFields: ['service-user-crn'],
+                errorSummaryLinkedField: 'service-user-crn',
+                message: errorMessages.startReferral.crnNotFound,
+              },
+            ],
+          }
+        } else {
+          logger.error('crn lookup failed', e)
+          error = {
+            errors: [
+              {
+                formFields: ['service-user-crn'],
+                errorSummaryLinkedField: 'service-user-crn',
+                message: errorMessages.startReferral.unknownError,
+              },
+            ],
+          }
+        }
+      }
+    }
 
-    res.redirect(303, `/referrals/${referral.id}/form`)
+    if (error === null) {
+      const referral = await this.interventionsService.createDraftReferral(res.locals.user.token, crn)
+
+      // fixme: this sets some static data for the new referral which will need to be
+      //  changed to allow these fields to be set properly
+      await this.interventionsService.patchDraftReferral(res.locals.user.token, referral.id, {
+        serviceCategoryId: '428ee70f-3001-4399-95a6-ad25eaaede16',
+      })
+
+      res.redirect(303, `/referrals/${referral.id}/form`)
+    } else {
+      // this isn't DRY, but is consistent with existing controller code
+      const { token, userId } = res.locals.user
+      const existingDraftReferrals = await this.interventionsService.getDraftReferralsForUser(token, userId)
+      const presenter = new DraftReferralsListPresenter(existingDraftReferrals)
+      const view = new ReferralStartView(presenter, error)
+
+      res.render(...view.renderArgs)
+    }
   }
 
   async viewReferralForm(req: Request, res: Response): Promise<void> {
