@@ -1069,6 +1069,54 @@ pactWith({ consumer: 'Interventions UI', provider: 'Interventions Service' }, pr
       expect(await interventionsService.getSentReferrals(token)).toEqual([sentReferral, sentReferral])
     })
   })
+
+  describe('getIntervention', () => {
+    const intervention = {
+      id: '14c84456a-cbaa-465d-b4d3-7772f2894fb8',
+      title: 'My intervention',
+      description:
+        'For service users who need the stability in their lives that a permanent job can bring,' +
+        'this intervention gives them the skills they need to independently apply for jobs.' +
+        'Activities include CV preparation, interview training and career advice. Out organisation ' +
+        "is well connected with many local employers, so although we can't promise anything we can " +
+        'give service users the best possible chance of finding work!',
+      pccRegions: [
+        { id: 'south-yorkshire', name: 'South Yorkshire' },
+        { id: 'west-midlands', name: 'West Midlands' },
+      ],
+      serviceCategory: {
+        id: 'ecbf2b63-c9e0-4e9d-a7d1-f69d85a3adbb',
+        name: 'Education, Training and Employment',
+      },
+      serviceProvider: {
+        id: '573d4a70-a795-49fb-813e-054873c7e600',
+        name: 'Harmony Living',
+      },
+      eligibility: {
+        minimumAge: 18,
+        maximumAge: 25,
+        allowsFemale: true,
+        allowsMale: true,
+      },
+    }
+
+    it('returns a single intervention', async () => {
+      await provider.addInteraction({
+        state: 'There is an existing intervention',
+        uponReceiving: 'a request for that intervention',
+        withRequest: {
+          method: 'GET',
+          path: '/interventions/14c84456a-cbaa-465d-b4d3-7772f2894fb8',
+          headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+        },
+        willRespondWith: {
+          status: 200,
+          body: Matchers.like(intervention),
+          headers: { 'Content-Type': 'application/json' },
+        },
+      })
+    })
+  })
 })
 
 describe('serializeDeliusServiceUser', () => {
