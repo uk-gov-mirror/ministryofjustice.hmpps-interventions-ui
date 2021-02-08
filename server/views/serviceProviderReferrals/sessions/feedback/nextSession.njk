@@ -1,12 +1,453 @@
 {% extends "../../../partials/layout.njk" %}
-
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{%- from "govuk/components/table/macro.njk" import govukTable -%}
 {% set pageTitle = "HMPPS Interventions" %}
 {% block pageTitle %}{{ pageTitle }} - GOV.UK{% endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full-width">
+<form>
+
       {# TODO IC-1057 Add content here #}
+
+
+
+{{ govukInput({
+  label: {
+    text: "What is the name of the event?",
+    classes: "govuk-label--l",
+    isPageHeading: true
+  },
+  id: "event-name",
+  name: "event-name"
+}) }}
+
+
+
+
+{{ govukDateInput({
+  id: "passport-issued",
+  namePrefix: "passport-issued",
+  fieldset: {
+    legend: {
+      text: "When was your passport issued?",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--l"
+    }
+  },
+  hint: {
+    text: "For example, 12 11 2007"
+  }
+}) }}
+
+
+<div class="govuk-form-group">
+  <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+      <h1 class="govuk-fieldset__heading">
+        When was your passport issued?
+      </h1>
+    </legend>
+    <div id="passport-issued-hint" class="govuk-hint">
+      For example, 12 11 2007
+    </div>
+    <div class="govuk-date-input" id="passport-issued">
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-date-input__label" for="passport-issued-day">
+            Hours
+          </label>
+          <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="passport-issued-day" name="passport-issued-day" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+      </div>
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-date-input__label" for="passport-issued-month">
+            Minutes 
+          </label>
+          <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="passport-issued-month" name="passport-issued-month" type="text" pattern="[0-9]*" inputmode="numeric"></div>
+      </div>
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+         {{ govukSelect({
+            id: "sort",
+            name: "sort",
+            label: {
+              text: "Am or pm"
+            },
+            items: [
+              {
+                value: "published",
+                text: "Recently published"
+              },
+              {
+                value: "updated",
+                text: "Recently updated",
+                selected: true
+              },
+              {
+                value: "views",
+                text: "Most views"
+              },
+              {
+                value: "comments",
+                text: "Most comments"
+              }
+            ]
+          }) }}
+          </div>
+      </div>
+    </div>
+
+  </fieldset>
+</div>
+
+
+
+{{ govukSelect({
+  id: "sort",
+  name: "sort",
+  label: {
+    text: "Sort by"
+  },
+  items: [
+    {
+      value: "published",
+      text: "Recently published"
+    },
+    {
+      value: "updated",
+      text: "Recently updated",
+      selected: true
+    },
+    {
+      value: "views",
+      text: "Most views"
+    },
+    {
+      value: "comments",
+      text: "Most comments"
+    }
+  ]
+}) }}
+
+{{ govukRadios({
+  idPrefix: "where-do-you-live",
+  name: "where-do-you-live",
+  fieldset: {
+    legend: {
+      text: "Where do you live?",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--l"
+    }
+  },
+  items: [
+    {
+      value: "england",
+      text: "England"
+    },
+    {
+      value: "scotland",
+      text: "Scotland"
+    },
+    {
+      value: "wales",
+      text: "Wales"
+    },
+    {
+      value: "northern-ireland",
+      text: "Northern Ireland"
+    }
+  ]
+}) }}
+
+
+
+{% set emailHtml %}
+{{ govukInput({
+  id: "contact-by-email",
+  name: "contact-by-email",
+  type: "email",
+  spellcheck: false,
+  classes: "govuk-!-width-one-third",
+  label: {
+    text: "Email address"
+  }
+}) }}
+{% endset -%}
+
+{% set phoneHtml %}
+{{ govukInput({
+  id: "contact-by-phone",
+  name: "contact-by-phone",
+  type: "tel",
+  classes: "govuk-!-width-one-third",
+  label: {
+    text: "Phone number"
+  }
+}) }}
+{% endset -%}
+
+{% set textHtml %}
+{{ govukInput({
+  id: "contact-by-text",
+  name: "contact-by-text",
+  type: "tel",
+  classes: "govuk-!-width-one-third",
+  label: {
+    text: "Mobile phone number"
+  }
+}) }}
+{{ govukInput({
+  id: "contact-by-text",
+  name: "contact-by-text",
+  type: "tel",
+  classes: "govuk-!-width-one-third",
+  label: {
+    text: "Mobile phone number"
+  }
+}) }}
+{{ govukInput({
+  id: "contact-by-text",
+  name: "contact-by-text",
+  type: "tel",
+  classes: "govuk-!-width-one-third",
+  label: {
+    text: "Mobile phone number"
+  }
+}) }}
+{% endset -%}
+
+{{ govukRadios({
+  idPrefix: "contact",
+  name: "contact",
+  fieldset: {
+    legend: {
+      text: "How would you prefer to be contacted?",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--l"
+    }
+  },
+  hint: {
+    text: "Select one option."
+  },
+  items: [
+    {
+      value: "email",
+      text: "Email",
+      conditional: {
+        html: emailHtml
+      }
+    },
+    {
+      value: "phone",
+      text: "Phone",
+      conditional: {
+        html: phoneHtml
+      }
+    },
+    {
+      value: "text",
+      text: "Address",
+      conditional: {
+        html: textHtml
+      }
+    }
+  ]
+}) }}
+
+
+
+{{ govukTable({
+attributes: {
+'data-module': 'moj-sortable-table'
+},
+head: [
+{
+  text: "Name",
+  attributes: {
+    "aria-sort": "ascending"
+  }
+},
+{
+  text: "Elevation",
+  attributes: {
+    "aria-sort": "none"
+  }
+},
+{
+  text: "Continent",
+  attributes: {
+    "aria-sort": "none"
+  }
+},
+{
+  text: "First summit",
+  attributes: {
+    "aria-sort": "none"
+  },
+  format: "numeric"
+}
+],
+rows: [
+[
+  {
+    text: "Aconcagua"
+  },
+  {
+    text: "6,961 meters",
+    attributes: {
+      "data-sort-value": "6961"
+    }
+  },
+  {
+    text: "South America"
+  },
+  {
+    text: "1897",
+    format: "numeric",
+    attributes: {
+      "data-sort-value": "1897"
+    }
+  }
+],
+[
+  {
+    text: "Denali"
+  },
+  {
+    text: "6,194 meters",
+    attributes: {
+      "data-sort-value": "6194"
+    }
+  },
+  {
+    text: "North America"
+  },
+  {
+    text: "1913",
+    format: "numeric",
+    attributes: {
+      "data-sort-value": "1913"
+    }
+  }
+],
+[
+  {
+    text: "Elbrus"
+  },
+  {
+    text: "5,642 meters",
+    attributes: {
+      "data-sort-value": "5642"
+    }
+  },
+  {
+    text: "Europe"
+  },
+  {
+    text: "1874",
+    format: "numeric",
+    attributes: {
+      "data-sort-value": "1874"
+    }
+  }
+],
+[
+  {
+    text: "Everest"
+  },
+  {
+    text: "8,850 meters",
+    attributes: {
+      "data-sort-value": "8850"
+    }
+  },
+  {
+    text: "Asia"
+  },
+  {
+    text: "1953",
+    format: "numeric",
+    attributes: {
+      "data-sort-value": "1953"
+    }
+  }
+],
+[
+  {
+    text: "Kilimanjaro"
+  },
+  {
+    text: "5,895 meters",
+    attributes: {
+      "data-sort-value": "5895"
+    }
+  },
+  {
+    text: "Africa"
+  },
+  {
+    text: "1889",
+    format: "numeric",
+    attributes: {
+      "data-sort-value": "1889"
+    }
+  }
+],
+[
+  {
+    text: "Puncak Jaya"
+  },
+  {
+    text: "4,884 meters",
+    attributes: {
+      "data-sort-value": "4884"
+    }
+  },
+  {
+    text: "Australia"
+  },
+  {
+    text: "1962",
+    format: "numeric",
+    attributes: {
+      "data-sort-value": "1962"
+    }
+  }
+],
+[
+  {
+    text: "Vinson"
+  },
+  {
+    text: "4,897 meters",
+    attributes: {
+      "data-sort-value": "4897"
+    }
+  },
+  {
+    text: "Antarctica"
+  },
+  {
+    text: "1966",
+    format: "numeric",
+    attributes: {
+      "data-sort-value": "1966"
+    }
+  }
+]
+]
+}) }}
+
+
+</form>
+
     </div>
   </div>
 {% endblock %}
