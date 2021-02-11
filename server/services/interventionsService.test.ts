@@ -8,6 +8,7 @@ import oauth2TokenFactory from '../../testutils/factories/oauth2Token'
 import serviceCategoryFactory from '../../testutils/factories/serviceCategory'
 import serviceProviderFactory from '../../testutils/factories/serviceProvider'
 import eligibilityFactory from '../../testutils/factories/eligibility'
+import interventionFactory from '../../testutils/factories/intervention'
 import { DeliusServiceUser } from './communityApiService'
 
 jest.mock('../data/hmppsAuthClient')
@@ -1106,7 +1107,177 @@ pactWith({ consumer: 'Interventions UI', provider: 'Interventions Service' }, pr
         },
       })
 
-      expect(await interventionsService.getInterventions(token)).toEqual([intervention, intervention])
+      expect(await interventionsService.getInterventions(token, {})).toEqual([intervention, intervention])
+    })
+
+    // TODO get feedback on how to stop these becoming tests of the backend logic - i.e. I want to test that it understands the filter that I'm asking it to apply, and I can't think of a way of verifying that other than asking it to filter something
+    //
+    // What else do we concievably want to test here? e.g. we want to know that we're sending acceptable filter params, and that we're serializing booleans, arrays etc correctly
+
+    describe('allowsMale filter', () => {
+      describe('when absent', () => {
+        // TODO I mean, this is just the same as the no-filter test, no?
+        it('does not narrow the results', async () => {
+          const intervention = interventionFactory.build()
+
+          await provider.addInteraction({
+            state: 'There are some interventions',
+            uponReceiving: 'TODO 6',
+            withRequest: {
+              method: 'GET',
+              path: '/interventions',
+              headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+            },
+            willRespondWith: {
+              status: 200,
+              body: Matchers.like([intervention, intervention]),
+              headers: { 'Content-Type': 'application/json' },
+            },
+          })
+
+          expect(await interventionsService.getInterventions(token, { allowsMale: true })).toEqual([
+            intervention,
+            intervention,
+          ])
+        })
+      })
+
+      describe('when true', () => {
+        it('narrows the results to those having allowsMale == true', async () => {
+          const intervention = interventionFactory.build()
+
+          await provider.addInteraction({
+            state: 'There are some interventions',
+            uponReceiving: 'TODO 5',
+            withRequest: {
+              method: 'GET',
+              path: '/interventions',
+              query: { allowsMale: 'true' },
+              headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+            },
+            willRespondWith: {
+              status: 200,
+              body: Matchers.like([intervention, intervention]),
+              headers: { 'Content-Type': 'application/json' },
+            },
+          })
+
+          expect(await interventionsService.getInterventions(token, { allowsMale: true })).toEqual([
+            intervention,
+            intervention,
+          ])
+        })
+      })
+
+      describe('when false', () => {
+        it('narrows the results to those having allowsMale == false', async () => {
+          const intervention = interventionFactory.build()
+
+          await provider.addInteraction({
+            state: 'There are some interventions',
+            uponReceiving: 'TODO 4',
+            withRequest: {
+              method: 'GET',
+              path: '/interventions',
+              query: { allowsMale: 'false' },
+              headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+            },
+            willRespondWith: {
+              status: 200,
+              body: Matchers.like([intervention, intervention]),
+              headers: { 'Content-Type': 'application/json' },
+            },
+          })
+
+          expect(await interventionsService.getInterventions(token, { allowsMale: false })).toEqual([
+            intervention,
+            intervention,
+          ])
+        })
+      })
+    })
+
+    describe('allowsFemale filter', () => {
+      describe('when absent', () => {
+        // TODO I mean, this is just the same as the no-filter test, no?
+        it('does not narrow the results', async () => {
+          const intervention = interventionFactory.build()
+
+          await provider.addInteraction({
+            state: 'There are some interventions',
+            uponReceiving: 'TODO 3',
+            withRequest: {
+              method: 'GET',
+              path: '/interventions',
+              headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+            },
+            willRespondWith: {
+              status: 200,
+              body: Matchers.like([intervention, intervention]),
+              headers: { 'Content-Type': 'application/json' },
+            },
+          })
+
+          expect(await interventionsService.getInterventions(token, { allowsFemale: true })).toEqual([
+            intervention,
+            intervention,
+          ])
+        })
+      })
+
+      describe('when true', () => {
+        it('narrows the results to those having allowsFemale == true', async () => {
+          const intervention = interventionFactory.build()
+
+          await provider.addInteraction({
+            state: 'There are some interventions',
+            uponReceiving: 'TODO 2',
+            withRequest: {
+              method: 'GET',
+              path: '/interventions',
+              query: { allowsFemale: 'true' },
+              headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+            },
+            willRespondWith: {
+              status: 200,
+              body: Matchers.like([intervention, intervention]),
+              headers: { 'Content-Type': 'application/json' },
+            },
+          })
+
+          expect(await interventionsService.getInterventions(token, { allowsFemale: true })).toEqual([
+            intervention,
+            intervention,
+          ])
+        })
+      })
+
+      describe('when false', () => {
+        it('narrows the results to those having allowsFemale == false', async () => {
+          const intervention = interventionFactory.build()
+
+          await provider.addInteraction({
+            state: 'There are some interventions',
+            uponReceiving: 'TODO 1',
+            withRequest: {
+              method: 'GET',
+              path: '/interventions',
+              query: { allowsFemale: 'false' },
+              headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+            },
+            willRespondWith: {
+              status: 200,
+              body: Matchers.like([intervention, intervention]),
+              headers: { 'Content-Type': 'application/json' },
+            },
+          })
+
+          expect(await interventionsService.getInterventions(token, { allowsFemale: false })).toEqual([
+            intervention,
+            intervention,
+          ])
+        })
+      })
     })
   })
 
