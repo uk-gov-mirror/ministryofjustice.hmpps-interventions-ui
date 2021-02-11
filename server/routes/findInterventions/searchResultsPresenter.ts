@@ -1,4 +1,4 @@
-import { Eligibility, Intervention } from '../../services/interventionsService'
+import { Eligibility, Intervention, InterventionsFilterParams, PCCRegion } from '../../services/interventionsService'
 import { SummaryListItem } from '../../utils/summaryList'
 import utils from '../../utils/utils'
 
@@ -10,7 +10,54 @@ export interface SearchResultPresenter {
 }
 
 export default class SearchResultsPresenter {
-  constructor(private readonly interventions: Intervention[]) {}
+  constructor(
+    private readonly interventions: Intervention[],
+    // TODO when is there user input data? always I guess
+    private readonly userInputData: Record<string, unknown>,
+    private readonly pccRegions: PCCRegion[]
+  ) {}
+
+  readonly pccRegionFilters: {
+    value: string
+    text: string
+    checked: boolean
+  }[] = this.pccRegions.map(region => ({
+    value: region.id,
+    text: region.name,
+    // TODO UGGGGHHHH
+    checked: ((this.userInputData['pcc-region-ids'] as string[]) ?? []).includes(region.id),
+  }))
+
+  readonly genderFilters: {
+    value: string
+    text: string
+    checked: boolean
+  }[] = [
+    {
+      value: 'male',
+      text: 'Male',
+      // TODO what to do about this casting?
+      checked: ((this.userInputData['gender'] as string[]) ?? []).includes('male'),
+    },
+    {
+      // TODO there's some problem where both are appearing checked
+      value: 'female',
+      text: 'Female',
+      checked: ((this.userInputData['gender'] as string[]) ?? []).includes('female'),
+    },
+  ]
+
+  readonly ageFilters: {
+    value: string
+    text: string
+    checked: boolean
+  }[] = [
+    {
+      value: '18-to-25-only',
+      text: 'Only for ages 18 to 25',
+      checked: ((this.userInputData['age'] as string[]) ?? []).includes('18-to-25-only'),
+    },
+  ]
 
   readonly results: SearchResultPresenter[] = this.interventions.map(intervention => ({
     title: intervention.title,
