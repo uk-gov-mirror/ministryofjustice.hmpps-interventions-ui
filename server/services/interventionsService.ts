@@ -113,6 +113,7 @@ export interface Eligibility {
 export interface InterventionsFilterParams {
   allowsMale?: boolean
   allowsFemale?: boolean
+  pccRegionIds?: string[]
 }
 
 export default class InterventionsService {
@@ -265,11 +266,24 @@ export default class InterventionsService {
   async getInterventions(token: string, filter: InterventionsFilterParams): Promise<Intervention[]> {
     const restClient = this.createRestClient(token)
 
+    const filterQuery = {}
+
+    if (filter.allowsMale !== undefined) {
+      filterQuery['allowsMale'] = filter.allowsMale
+    }
+
+    if (filter.allowsFemale !== undefined) {
+      filterQuery['allowsFemale'] = filter.allowsFemale
+    }
+
+    if (filter.pccRegionIds !== undefined) {
+      filterQuery['pccRegionIds'] = filter.pccRegionIds.join(',')
+    }
+
     return (await restClient.get({
       path: '/interventions',
       headers: { Accept: 'application/json' },
-      // TODO ugh what
-      query: filter as Record<string, unknown>,
+      query: filterQuery,
     })) as Intervention[]
   }
 

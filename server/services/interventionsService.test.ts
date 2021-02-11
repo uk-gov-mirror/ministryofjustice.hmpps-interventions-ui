@@ -1279,6 +1279,61 @@ pactWith({ consumer: 'Interventions UI', provider: 'Interventions Service' }, pr
         })
       })
     })
+
+    describe('pccRegions filter', () => {
+      describe('when absent', () => {
+        // TODO I mean, this is just the same as the no-filter test, no?
+        it('does not narrow the results', async () => {
+          const intervention = interventionFactory.build()
+
+          await provider.addInteraction({
+            state: 'There are some interventions',
+            uponReceiving: 'TODO 7',
+            withRequest: {
+              method: 'GET',
+              path: '/interventions',
+              headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+            },
+            willRespondWith: {
+              status: 200,
+              body: Matchers.like([intervention, intervention]),
+              headers: { 'Content-Type': 'application/json' },
+            },
+          })
+
+          expect(await interventionsService.getInterventions(token, { allowsFemale: true })).toEqual([
+            intervention,
+            intervention,
+          ])
+        })
+      })
+
+      describe('when a list of PCC region IDs is passed', () => {
+        it('narrows the results to those whose PCC region is in that list', async () => {
+          const intervention = interventionFactory.build()
+
+          await provider.addInteraction({
+            state: 'There are some interventions',
+            uponReceiving: 'TODO 8',
+            withRequest: {
+              method: 'GET',
+              path: '/interventions',
+              query: { pccRegionIds: 'cheshire,cumbria,merseyside' },
+              headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+            },
+            willRespondWith: {
+              status: 200,
+              body: Matchers.like([intervention, intervention]),
+              headers: { 'Content-Type': 'application/json' },
+            },
+          })
+
+          expect(
+            await interventionsService.getInterventions(token, { pccRegionIds: ['cheshire', 'cumbria', 'merseyside'] })
+          ).toEqual([intervention, intervention])
+        })
+      })
+    })
   })
 
   describe('getIntervention', () => {
