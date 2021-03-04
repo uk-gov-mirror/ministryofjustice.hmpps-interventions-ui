@@ -53,6 +53,10 @@ export default function routes(router: Router, services: Services): Router {
     }
   })
 
+  get('/service-provider/action-plan/:id/number-of-sessions', (req, res) =>
+    serviceProviderReferralsController.createActionPlanSessions(req, res)
+  )
+
   get('/service-provider/dashboard', (req, res) => serviceProviderReferralsController.showDashboard(req, res))
   get('/service-provider/referrals/:id/details', (req, res) =>
     serviceProviderReferralsController.showReferral(req, res)

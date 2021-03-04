@@ -19,6 +19,9 @@ import InterventionProgressView from './interventionProgressView'
 import InterventionProgressPresenter from './interventionProgressPresenter'
 import AddActionPlanActivitiesForm from './addActionPlanActivitiesForm'
 import FinaliseActionPlanActivitiesForm from './finaliseActionPlanActivitiesForm'
+import ActionPlanFormPresenter from './actionPlan/actionPlanFormPresenter'
+import ServiceUserBannerPresenter from './serviceUserBannerPresenter'
+import ActionPlanFormView from './actionPlan/actionPlanFormView'
 
 export default class ServiceProviderReferralsController {
   constructor(
@@ -244,5 +247,16 @@ export default class ServiceProviderReferralsController {
       res.status(400)
       res.render(...view.renderArgs)
     }
+  }
+
+  async createActionPlanSessions(req: Request, res: Response): Promise<void> {
+    const actionPlan = await this.interventionsService.getDraftActionPlan(res.locals.user.token, req.params.id)
+    const referral = await this.interventionsService.getSentReferral(res.locals.user.token, actionPlan.referralId)
+    const serviceUser = await this.communityApiService.getServiceUserByCRN(referral.referral.serviceUser.crn)
+
+    const serviceUserBannerPresenter = new ServiceUserBannerPresenter(serviceUser)
+    const presenter = new ActionPlanFormPresenter(serviceUser)
+    const view = new ActionPlanFormView(presenter, serviceUserBannerPresenter)
+    res.render(...view.numSessionRenderArgs)
   }
 }
