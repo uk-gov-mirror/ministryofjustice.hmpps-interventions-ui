@@ -34,6 +34,75 @@ describe(AddActionPlanActivitiesPresenter, () => {
     })
   })
 
+  describe('errorMessage', () => {
+    const serviceCategory = serviceCategoryFactory.build({ name: 'accommodation' })
+
+    const referralParams = {
+      referral: { serviceCategoryId: serviceCategory.id, serviceUser: { firstName: 'Jenny', lastName: 'Jones' } },
+    }
+
+    const sentReferral = sentReferralFactory.assigned().build(referralParams)
+    const actionPlan = draftActionPlan.justCreated(sentReferral.id).build()
+
+    describe('when no error is passed in', () => {
+      it('returns null', () => {
+        const presenter = new AddActionPlanActivitiesPresenter(sentReferral, serviceCategory, actionPlan)
+
+        expect(presenter.errorMessage).toBeNull()
+      })
+    })
+
+    describe('when an error is passed in', () => {
+      it('returns error information', () => {
+        const presenter = new AddActionPlanActivitiesPresenter(sentReferral, serviceCategory, actionPlan, {
+          errors: [
+            {
+              formFields: ['add-activity'],
+              errorSummaryLinkedField: 'add-activity',
+              message: 'Enter an activity',
+            },
+          ],
+        })
+
+        expect(presenter.errorMessage).toEqual('Enter an activity')
+      })
+    })
+  })
+
+  describe('errorSummary', () => {
+    const serviceCategory = serviceCategoryFactory.build({ name: 'accommodation' })
+
+    const referralParams = {
+      referral: { serviceCategoryId: serviceCategory.id, serviceUser: { firstName: 'Jenny', lastName: 'Jones' } },
+    }
+
+    const sentReferral = sentReferralFactory.assigned().build(referralParams)
+    const actionPlan = draftActionPlan.justCreated(sentReferral.id).build()
+
+    describe('when no error is passed in', () => {
+      it('returns null', () => {
+        const presenter = new AddActionPlanActivitiesPresenter(sentReferral, serviceCategory, actionPlan)
+
+        expect(presenter.errorSummary).toBeNull()
+      })
+    })
+
+    describe('when an error is passed in', () => {
+      it('returns error information', () => {
+        const presenter = new AddActionPlanActivitiesPresenter(sentReferral, serviceCategory, actionPlan, {
+          errors: [
+            {
+              formFields: ['add-activity'],
+              errorSummaryLinkedField: 'add-activity',
+              message: 'Enter an activity',
+            },
+          ],
+        })
+
+        expect(presenter.errorSummary).toEqual([{ field: 'add-activity', message: 'Enter an activity' }])
+      })
+    })
+  })
   describe('desiredOutcomes', () => {
     it('returns the desired outcomes on the Service Category that match those populated on the SentReferral', () => {
       const desiredOutcomes = [

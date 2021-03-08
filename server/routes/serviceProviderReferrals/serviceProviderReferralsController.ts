@@ -15,6 +15,8 @@ import { FormValidationError } from '../../utils/formValidationError'
 import errorMessages from '../../utils/errorMessages'
 import AddActionPlanActivitiesPresenter from './addActionPlanActivitiesPresenter'
 import AddActionPlanActivitiesView from './addActionPlanActivitiesView'
+import AddActionPlanActivityForm from './addActionPlanActivityForm'
+import createFormValidationErrorOrRethrow from '../../utils/interventionsFormError'
 
 export default class ServiceProviderReferralsController {
   constructor(
@@ -165,5 +167,43 @@ export default class ServiceProviderReferralsController {
     const view = new AddActionPlanActivitiesView(presenter)
 
     res.render(...view.renderArgs)
+  }
+
+  async addActivityToActionPlan(req: Request, res: Response): Promise<void> {
+    const form = await AddActionPlanActivityForm.createForm(req)
+
+    let error: FormValidationError | null = null
+
+    if (form.isValid) {
+      try {
+        await this.interventionsService.updateDraftActionPlan(
+          res.locals.user.token,
+          req.params.id,
+          form.activityParamsForUpdate
+        )
+      } catch (e) {
+        error = createFormValidationErrorOrRethrow(e)
+      }
+    } else {
+      error = form.error
+    }
+
+    if (!error) {
+      return res.redirect(`/service-provider/action-plan/${req.params.id}/add-activities`)
+    }
+
+    const actionPlan = await this.interventionsService.getDraftActionPlan(res.locals.user.token, req.params.id)
+    const sentReferral = await this.interventionsService.getSentReferral(res.locals.user.token, actionPlan.referralId)
+
+    const serviceCategory = await this.interventionsService.getServiceCategory(
+      res.locals.user.token,
+      sentReferral.referral.serviceCategoryId
+    )
+
+    const presenter = new AddActionPlanActivitiesPresenter(sentReferral, serviceCategory, actionPlan, error)
+    const view = new AddActionPlanActivitiesView(presenter)
+
+    res.status(400)
+    return res.render(...view.renderArgs)
   }
 }
