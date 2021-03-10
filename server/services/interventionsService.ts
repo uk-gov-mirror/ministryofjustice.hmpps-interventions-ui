@@ -159,6 +159,12 @@ export interface SubmittedActionPlan {
   actionPlanFields: ActionPlanFields
 }
 
+export interface ActionPlanAppointment {
+  sessionNumber: number
+  appointmentTime: string
+  durationInMinutes: number
+}
+
 export default class InterventionsService {
   constructor(private readonly config: ApiConfig) {}
 
@@ -398,5 +404,13 @@ export default class InterventionsService {
       path: `/draft-action-plan/${id}/submit`,
       headers: { Accept: 'application/json' },
     })) as SubmittedActionPlan
+  }
+
+  async getActionPlanAppointments(token: string, id: string): Promise<ActionPlanAppointment[]> {
+    const restClient = this.createRestClient(token)
+    return (await restClient.get({
+      path: `/action-plan/${id}/appointments`,
+      headers: { Accept: 'application/json' },
+    })) as ActionPlanAppointment[]
   }
 }
