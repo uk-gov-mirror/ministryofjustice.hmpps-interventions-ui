@@ -11,6 +11,7 @@ const interventionsMocks = new InterventionsServiceMocks(wiremock, '')
 export default async function setUpMocks(): Promise<void> {
   await wiremock.resetStubs()
 
+  /*
   const accommodationServiceCategory = serviceCategoryFactory.build({ name: 'accommodation' })
   const socialInclusionServiceCategory = serviceCategoryFactory.build({ name: 'social inclusion' })
 
@@ -101,4 +102,5 @@ export default async function setUpMocks(): Promise<void> {
       await interventionsMocks.stubGetSentReferral(referral.id, referral)
     }),
   ])
+  */
 }
