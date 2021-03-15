@@ -12,7 +12,7 @@ import deliusServiceUser from '../../../testutils/factories/deliusServiceUser'
 import HmppsAuthClient from '../../data/hmppsAuthClient'
 import MockedHmppsAuthClient from '../../data/testutils/hmppsAuthClientSetup'
 import hmppsAuthUserFactory from '../../../testutils/factories/hmppsAuthUser'
-import draftActionPlanFactory from '../../../testutils/factories/draftActionPlan'
+import actionPlanFactory from '../../../testutils/factories/actionPlan'
 
 jest.mock('../../services/interventionsService')
 jest.mock('../../services/communityApiService')
@@ -267,9 +267,9 @@ describe('GET /service-provider/action-plan/:actionPlanId/add-activities', () =>
         serviceUser: { firstName: 'Alex', lastName: 'River' },
       },
     })
-    const draftActionPlan = draftActionPlanFactory.justCreated(referral.id).build()
+    const draftActionPlan = actionPlanFactory.justCreated(referral.id).build()
 
-    interventionsService.getDraftActionPlan.mockResolvedValue(draftActionPlan)
+    interventionsService.getActionPlan.mockResolvedValue(draftActionPlan)
     interventionsService.getSentReferral.mockResolvedValue(referral)
     interventionsService.getServiceCategory.mockResolvedValue(serviceCategory)
 
