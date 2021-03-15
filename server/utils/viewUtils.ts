@@ -4,6 +4,15 @@ import { SummaryListArgs } from './govukFrontendTypes'
 import CalendarDay from './calendarDay'
 import ReferralDataPresenterUtils from '../routes/referrals/referralDataPresenterUtils'
 
+export enum GovukColour {
+  Green = 'green',
+  Yellow = 'yellow',
+  Red = 'red',
+  Purple = 'purple',
+  Grey = 'grey',
+  Blue = 'blue',
+}
+
 export default class ViewUtils {
   static escape(val: string): string {
     const escape = new nunjucks.Environment().getFilter('escape')
@@ -67,5 +76,9 @@ export default class ViewUtils {
     }
 
     return notFoundMessage
+  }
+
+  static govukTag(text: string, colour?: GovukColour): string {
+    return `<strong class="govuk-tag ${colour ? `govuk-tag--${colour}` : ''}">${text}</strong>`
   }
 }
