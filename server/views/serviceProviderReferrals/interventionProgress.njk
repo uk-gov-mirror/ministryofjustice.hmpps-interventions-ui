@@ -1,5 +1,6 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% extends "./referralNavigationTemplate.njk" %}
 
@@ -22,14 +23,17 @@
       {{ govukSummaryList(actionPlanSummaryListArgs(govukTag, csrfToken)) }}
 
       <h2 class="govuk-heading-m">Session progress</h2>
-
       <p class="govuk-body">
-      Track the progress of each intervention session.
+        Track the progress of each intervention session.
       </p>
 
-      <p class="govuk-body">
-      Sessions will appear here when the action plan is ready.
-      </p>
+      {% if sessionTableArgs.rows.length %}
+        {{ govukTable(sessionTableArgs) }}
+      {% else %}
+          <p class="govuk-body">
+          Sessions will appear here when the action plan is ready.
+          </p>
+      {% endif %}
 
       <h2 class="govuk-heading-m">End of service report</h2>
 

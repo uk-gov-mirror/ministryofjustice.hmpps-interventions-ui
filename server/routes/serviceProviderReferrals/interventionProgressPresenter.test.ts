@@ -10,9 +10,52 @@ describe(InterventionProgressPresenter, () => {
       const referral = sentReferralFactory.build()
       const serviceCategory = serviceCategoryFactory.build()
       const serviceUser = serviceUserFactory.build()
-      const presenter = new InterventionProgressPresenter(referral, serviceCategory, null, serviceUser)
+      const presenter = new InterventionProgressPresenter(referral, serviceCategory, null, serviceUser, [])
 
       expect(presenter.createActionPlanFormAction).toEqual(`/service-provider/referrals/${referral.id}/action-plan`)
+    })
+  })
+
+  describe('sessionTableRows', () => {
+    it('returns an empty list if there are no appointments', () => {
+      const referral = sentReferralFactory.build()
+      const serviceCategory = serviceCategoryFactory.build()
+      const serviceUser = serviceUserFactory.build()
+      const presenter = new InterventionProgressPresenter(referral, serviceCategory, null, serviceUser, [])
+
+      expect(presenter.sessionTableRows).toEqual([])
+    })
+
+    it('populates the table with formatted session information', () => {
+      const referral = sentReferralFactory.build()
+      const serviceCategory = serviceCategoryFactory.build()
+      const serviceUser = serviceUserFactory.build()
+      const presenter = new InterventionProgressPresenter(referral, serviceCategory, null, serviceUser, [
+        {
+          sessionNumber: 1,
+          appointmentTime: '2020-12-07T13:00:00.000000Z',
+          durationInMinutes: 120,
+        },
+        {
+          sessionNumber: 2,
+          appointmentTime: null,
+          durationInMinutes: null,
+        },
+      ])
+      expect(presenter.sessionTableRows).toEqual([
+        [
+          { text: 'Session 1' },
+          { text: '2020-12-07T13:00:00.000000Z' }, // fixme: needs to be formatted properly
+          { html: '<strong class="govuk-tag govuk-tag--blue">SCHEDULED</strong>' },
+          { html: '<a class="govuk-link" href="#">Reschedule session</a>' },
+        ],
+        [
+          { text: 'Session 2' },
+          { text: '' },
+          { html: '<strong class="govuk-tag govuk-tag--grey">NOT SCHEDULED</strong>' },
+          { html: '<a class="govuk-link" href="#">Edit session details</a>' },
+        ],
+      ])
     })
   })
 
@@ -22,7 +65,7 @@ describe(InterventionProgressPresenter, () => {
         const referral = sentReferralFactory.build()
         const serviceCategory = serviceCategoryFactory.build({ name: 'accommodation' })
         const serviceUser = serviceUserFactory.build()
-        const presenter = new InterventionProgressPresenter(referral, serviceCategory, null, serviceUser)
+        const presenter = new InterventionProgressPresenter(referral, serviceCategory, null, serviceUser, [])
 
         expect(presenter.text).toMatchObject({
           title: 'Accommodation',
@@ -36,7 +79,7 @@ describe(InterventionProgressPresenter, () => {
           const referral = sentReferralFactory.build()
           const serviceCategory = serviceCategoryFactory.build()
           const serviceUser = serviceUserFactory.build()
-          const presenter = new InterventionProgressPresenter(referral, serviceCategory, null, serviceUser)
+          const presenter = new InterventionProgressPresenter(referral, serviceCategory, null, serviceUser, [])
 
           expect(presenter.text).toMatchObject({ actionPlanStatus: 'Not submitted' })
         })
@@ -48,7 +91,7 @@ describe(InterventionProgressPresenter, () => {
           const serviceCategory = serviceCategoryFactory.build()
           const actionPlan = actionPlanFactory.notSubmitted().build()
           const serviceUser = serviceUserFactory.build()
-          const presenter = new InterventionProgressPresenter(referral, serviceCategory, actionPlan, serviceUser)
+          const presenter = new InterventionProgressPresenter(referral, serviceCategory, actionPlan, serviceUser, [])
 
           expect(presenter.text).toMatchObject({ actionPlanStatus: 'Not submitted' })
         })
@@ -60,7 +103,7 @@ describe(InterventionProgressPresenter, () => {
           const serviceCategory = serviceCategoryFactory.build()
           const actionPlan = actionPlanFactory.submitted().build()
           const serviceUser = serviceUserFactory.build()
-          const presenter = new InterventionProgressPresenter(referral, serviceCategory, actionPlan, serviceUser)
+          const presenter = new InterventionProgressPresenter(referral, serviceCategory, actionPlan, serviceUser, [])
 
           expect(presenter.text).toMatchObject({ actionPlanStatus: 'Submitted' })
         })
@@ -74,7 +117,7 @@ describe(InterventionProgressPresenter, () => {
         const referral = sentReferralFactory.build()
         const serviceCategory = serviceCategoryFactory.build()
         const serviceUser = serviceUserFactory.build()
-        const presenter = new InterventionProgressPresenter(referral, serviceCategory, null, serviceUser)
+        const presenter = new InterventionProgressPresenter(referral, serviceCategory, null, serviceUser, [])
 
         expect(presenter.actionPlanStatusStyle).toEqual('inactive')
       })
@@ -86,7 +129,7 @@ describe(InterventionProgressPresenter, () => {
         const serviceCategory = serviceCategoryFactory.build()
         const actionPlan = actionPlanFactory.notSubmitted().build()
         const serviceUser = serviceUserFactory.build()
-        const presenter = new InterventionProgressPresenter(referral, serviceCategory, actionPlan, serviceUser)
+        const presenter = new InterventionProgressPresenter(referral, serviceCategory, actionPlan, serviceUser, [])
 
         expect(presenter.actionPlanStatusStyle).toEqual('inactive')
       })
@@ -98,7 +141,7 @@ describe(InterventionProgressPresenter, () => {
         const serviceCategory = serviceCategoryFactory.build()
         const actionPlan = actionPlanFactory.submitted().build()
         const serviceUser = serviceUserFactory.build()
-        const presenter = new InterventionProgressPresenter(referral, serviceCategory, actionPlan, serviceUser)
+        const presenter = new InterventionProgressPresenter(referral, serviceCategory, actionPlan, serviceUser, [])
 
         expect(presenter.actionPlanStatusStyle).toEqual('active')
       })

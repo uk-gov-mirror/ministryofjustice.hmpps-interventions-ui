@@ -42,3 +42,10 @@ export interface TagArgs {
   text: string
   classes?: string
 }
+
+interface TableRowItem {
+  text?: string
+  html?: string
+}
+
+export type TableRows = TableRowItem[][]

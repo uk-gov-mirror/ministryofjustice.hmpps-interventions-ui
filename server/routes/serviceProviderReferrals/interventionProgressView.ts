@@ -57,6 +57,13 @@ export default class InterventionProgressView {
 
   private readonly actionPlanTagClass = this.presenter.actionPlanStatusStyle === 'active' ? '' : 'govuk-tag--grey'
 
+  private sessionTableArgs = {
+    head: this.presenter.sessionTableHeaders.map((header: string) => {
+      return { text: header }
+    }),
+    rows: this.presenter.sessionTableRows,
+  }
+
   get renderArgs(): [string, Record<string, unknown>] {
     return [
       'serviceProviderReferrals/interventionProgress',
@@ -66,6 +73,7 @@ export default class InterventionProgressView {
         serviceUserBannerArgs: this.presenter.referralOverviewPagePresenter.serviceUserBannerArgs,
         initialAssessmentSummaryListArgs: this.initialAssessmentSummaryListArgs.bind(this),
         actionPlanSummaryListArgs: this.actionPlanSummaryListArgs.bind(this),
+        sessionTableArgs: this.sessionTableArgs,
       },
     ]
   }
