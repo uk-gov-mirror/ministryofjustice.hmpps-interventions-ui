@@ -23,6 +23,10 @@ import ReviewActionPlanPresenter from './reviewActionPlanPresenter'
 import ReviewActionPlanView from './reviewActionPlanView'
 import ActionPlanConfirmationPresenter from './actionPlanConfirmationPresenter'
 import ActionPlanConfirmationView from './actionPlanConfirmationView'
+import ServiceUserBannerPresenter from './serviceUserBannerPresenter'
+import AddActionPlanNumberOfSessionsView from './actionPlan/addActionPlanNumberOfSessionsView'
+import AddActionPlanNumberOfSessionsPresenter from './actionPlan/addActionPlanNumberOfSessionsPresenter'
+import logger from '../../../log'
 
 export default class ServiceProviderReferralsController {
   constructor(
@@ -240,7 +244,7 @@ export default class ServiceProviderReferralsController {
     const form = new FinaliseActionPlanActivitiesForm(sentReferral, actionPlan, serviceCategory)
 
     if (form.isValid) {
-      res.redirect(`/service-provider/action-plan/${actionPlan.id}/review`)
+      res.redirect(`/service-provider/action-plan/${actionPlan.id}/add-number-of-sessions`)
     } else {
       const presenter = new AddActionPlanActivitiesPresenter(sentReferral, serviceCategory, actionPlan, form.errors)
       const view = new AddActionPlanActivitiesView(presenter)
@@ -292,5 +296,43 @@ export default class ServiceProviderReferralsController {
     const view = new ActionPlanConfirmationView(presenter)
 
     res.render(...view.renderArgs)
+  }
+
+  async addNumberOfSessionsToActionPlan(req: Request, res: Response): Promise<void> {
+    let formError: FormValidationError | null = null
+    const { user } = res.locals
+    const actionPlanId = req.params.id
+    const actionPlan = await this.interventionsService.getDraftActionPlan(user.token, actionPlanId)
+
+    if (req.method === 'POST') {
+      const { numberOfSessions } = req.body
+      if (numberOfSessions && numberOfSessions > 0) {
+        logger.info({ username: user.username }, 'updating draft action plan number of sessions')
+        await this.interventionsService.updateDraftActionPlan(user.token, actionPlanId, { numberOfSessions })
+        return res.redirect(`/service-provider/action-plan/${actionPlan.id}/review`)
+      }
+
+      formError = {
+        errors: [
+          {
+            formFields: ['numberOfSessions'],
+            errorSummaryLinkedField: 'numberOfSessions',
+            message: 'Number of sessions must be greater than zero',
+          },
+        ],
+      }
+    }
+
+    const referral = await this.interventionsService.getSentReferral(user.token, actionPlan.referralId)
+    const serviceUser = await this.communityApiService.getServiceUserByCRN(referral.referral.serviceUser.crn)
+    const serviceCategory = await this.interventionsService.getServiceCategory(
+      user.token,
+      referral.referral.serviceCategoryId
+    )
+
+    const serviceUserBannerPresenter = new ServiceUserBannerPresenter(serviceUser)
+    const presenter = new AddActionPlanNumberOfSessionsPresenter(serviceUser, serviceCategory, formError)
+    const view = new AddActionPlanNumberOfSessionsView(serviceUserBannerPresenter, presenter)
+    return res.render(...view.renderArgs)
   }
 }
