@@ -1,7 +1,7 @@
 import AddActionPlanActivitiesPresenter from './addActionPlanActivitiesPresenter'
-import sentReferralFactory from '../../../testutils/factories/sentReferral'
-import serviceCategoryFactory from '../../../testutils/factories/serviceCategory'
-import draftActionPlanFactory from '../../../testutils/factories/draftActionPlan'
+import draftActionPlanFactory from '../../../../testutils/factories/draftActionPlan'
+import sentReferralFactory from '../../../../testutils/factories/sentReferral'
+import serviceCategoryFactory from '../../../../testutils/factories/serviceCategory'
 
 describe(AddActionPlanActivitiesPresenter, () => {
   const desiredOutcomes = [

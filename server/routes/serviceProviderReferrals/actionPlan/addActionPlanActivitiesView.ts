@@ -1,4 +1,4 @@
-import ViewUtils from '../../utils/viewUtils'
+import ViewUtils from '../../../utils/viewUtils'
 import AddActionPlanActivitiesPresenter from './addActionPlanActivitiesPresenter'
 
 export default class AddActionPlanActivitiesView {
