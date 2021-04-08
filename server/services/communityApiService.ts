@@ -91,7 +91,7 @@ interface Offence {
 export default class CommunityApiService {
   constructor(private readonly hmppsAuthClient: HmppsAuthClient) {}
 
-  private restClient(token: string): RestClient {
+  restClient(token: string): RestClient {
     return new RestClient('Community API Client', config.apis.communityApi, token)
   }
 
