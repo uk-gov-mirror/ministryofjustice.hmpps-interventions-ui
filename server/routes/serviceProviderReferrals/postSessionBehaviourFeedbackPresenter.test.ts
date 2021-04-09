@@ -14,12 +14,82 @@ describe(PostSessionBehaviourFeedbackPresenter, () => {
         behaviourDescription: {
           question: `Describe Alex's behaviour in this session`,
           hint: 'For example, consider how well-engaged they were and what their body language was like.',
+          errorMessage: null,
         },
         notifyProbationPractitioner: {
           question: 'If you described poor behaviour, do you want to notify the probation practitioner?',
           explanation: 'If you select yes, the probation practitioner will be notified by email.',
           hint: 'Select one option',
+          errorMessage: null,
         },
+      })
+    })
+
+    describe('when there are errors', () => {
+      it('populates the error messages for the fields with errors', () => {
+        const appointment = actionPlanAppointmentFactory.build()
+        const serviceUser = deliusServiceUserFactory.build()
+        const presenter = new PostSessionBehaviourFeedbackPresenter(appointment, serviceUser, {
+          errors: [
+            {
+              formFields: ['behaviour-description'],
+              errorSummaryLinkedField: 'behaviour-description',
+              message: 'behaviour msg',
+            },
+            {
+              formFields: ['notify-probation-practitioner'],
+              errorSummaryLinkedField: 'notify-probation-practitioner',
+              message: 'notify pp msg',
+            },
+          ],
+        })
+
+        expect(presenter.text).toMatchObject({
+          behaviourDescription: {
+            errorMessage: 'behaviour msg',
+          },
+          notifyProbationPractitioner: {
+            errorMessage: 'notify pp msg',
+          },
+        })
+      })
+    })
+  })
+
+  describe('errorSummary', () => {
+    describe('when error is null', () => {
+      it('returns null', () => {
+        const appointment = actionPlanAppointmentFactory.build()
+        const serviceUser = deliusServiceUserFactory.build({ firstName: 'Alex' })
+        const presenter = new PostSessionBehaviourFeedbackPresenter(appointment, serviceUser)
+
+        expect(presenter.errorSummary).toBeNull()
+      })
+    })
+
+    describe('when error is not null', () => {
+      it('returns a summary of the errors sorted into the order their fields appear on the page', () => {
+        const appointment = actionPlanAppointmentFactory.build()
+        const serviceUser = deliusServiceUserFactory.build()
+        const presenter = new PostSessionBehaviourFeedbackPresenter(appointment, serviceUser, {
+          errors: [
+            {
+              formFields: ['behaviour-description'],
+              errorSummaryLinkedField: 'behaviour-description',
+              message: 'behaviour msg',
+            },
+            {
+              formFields: ['notify-probation-practitioner'],
+              errorSummaryLinkedField: 'notify-probation-practitioner',
+              message: 'notify pp msg',
+            },
+          ],
+        })
+
+        expect(presenter.errorSummary).toEqual([
+          { field: 'behaviour-description', message: 'behaviour msg' },
+          { field: 'notify-probation-practitioner', message: 'notify pp msg' },
+        ])
       })
     })
   })
@@ -74,7 +144,7 @@ describe(PostSessionBehaviourFeedbackPresenter, () => {
             },
           })
           const serviceUser = deliusServiceUserFactory.build()
-          const presenter = new PostSessionBehaviourFeedbackPresenter(appointment, serviceUser, {
+          const presenter = new PostSessionBehaviourFeedbackPresenter(appointment, serviceUser, null, {
             'behaviour-description': 'Alex misbehaved during the session',
           })
 
@@ -124,7 +194,7 @@ describe(PostSessionBehaviourFeedbackPresenter, () => {
             },
           })
           const serviceUser = deliusServiceUserFactory.build()
-          const presenter = new PostSessionBehaviourFeedbackPresenter(appointment, serviceUser, {
+          const presenter = new PostSessionBehaviourFeedbackPresenter(appointment, serviceUser, null, {
             'behaviour-description': 'Alex misbehaved during the session',
             'notify-probation-practitioner': 'yes',
           })
