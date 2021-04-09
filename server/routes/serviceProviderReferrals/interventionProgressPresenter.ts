@@ -26,6 +26,8 @@ export default class InterventionProgressPresenter {
     return this.referral.assignedTo !== null
   }
 
+  readonly actionPlanFormUrl = `/service-provider/action-plan/${this.actionPlan.id}/add-activities`
+
   readonly createActionPlanFormAction = `/service-provider/referrals/${this.referral.id}/action-plan`
 
   readonly text = {
@@ -35,7 +37,7 @@ export default class InterventionProgressPresenter {
 
   readonly actionPlanStatusStyle: 'active' | 'inactive' = this.actionPlanSubmitted ? 'active' : 'inactive'
 
-  private get actionPlanSubmitted() {
+  get actionPlanSubmitted(): boolean {
     return this.actionPlan !== null && this.actionPlan.submittedAt !== null
   }
 

@@ -59,6 +59,11 @@ export default class InterventionProgressView {
                  </form>`,
         },
       })
+    } else if (!this.presenter.actionPlanSubmitted) {
+      rows.push({
+        key: { text: 'Action' },
+        value: { html: `<a href="${this.presenter.actionPlanFormUrl}" class="govuk-link">Continue</a>` },
+      })
     }
 
     return { rows }
