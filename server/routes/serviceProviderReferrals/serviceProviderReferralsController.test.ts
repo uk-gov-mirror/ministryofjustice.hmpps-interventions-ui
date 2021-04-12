@@ -699,7 +699,7 @@ describe('POST /service-provider/action-plan/:actionPlanId/appointment/:sessionN
         .type('form')
         .send({
           attended: 'yes',
-          additionalAttendanceInformation: 'Alex made the session on time',
+          'additional-attendance-information': 'Alex made the session on time',
         })
         .expect(302)
         .expect(
