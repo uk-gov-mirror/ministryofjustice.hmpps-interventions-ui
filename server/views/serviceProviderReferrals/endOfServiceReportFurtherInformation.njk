@@ -1,0 +1,26 @@
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "../partials/layout.njk" %}
+
+{% block pageTitle %}
+  HMPPS Interventions - GOV.UK
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">{{ presenter.text.title }}</h1>
+
+      <h2 class="govuk-heading-m">{{ presenter.text.subtitle }}</h2>
+
+      <form method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+        {{ govukTextarea(furtherInformationTextareaArgs) }}
+
+        {{ govukButton({ text: "Save and continue" }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -44,6 +44,9 @@ import AuthUtils from '../../utils/authUtils'
 import EndOfServiceReportOutcomeForm from './endOfServiceReportOutcomeForm'
 import EndOfServiceReportOutcomePresenter from './endOfServiceReportOutcomePresenter'
 import EndOfServiceReportOutcomeView from './endOfServiceReportOutcomeView'
+import EndOfServiceReportFurtherInformationForm from './endOfServiceReportFurtherInformationForm'
+import EndOfServiceReportFurtherInformationPresenter from './endOfServiceReportFurtherInformationPresenter'
+import EndOfServiceReportFurtherInformationView from './endOfServiceReportFurtherInformationView'
 
 export default class ServiceProviderReferralsController {
   constructor(
@@ -680,6 +683,24 @@ export default class ServiceProviderReferralsController {
       formValidationError
     )
     const view = new EndOfServiceReportOutcomeView(presenter)
+
+    res.render(...view.renderArgs)
+  }
+
+  async editEndOfServiceReportFurtherInformation(req: Request, res: Response): Promise<void> {
+    const { accessToken } = res.locals.user.token
+    const { id } = req.params
+
+    const endOfServiceReport = await this.interventionsService.getEndOfServiceReport(accessToken, req.params.id)
+
+    if (req.method === 'POST') {
+      const form = new EndOfServiceReportFurtherInformationForm(req)
+      await this.interventionsService.updateDraftEndOfServiceReport(accessToken, id, form.paramsForUpdate)
+      res.redirect(`/service-provider/end-of-service-report/${endOfServiceReport.id}/check-answers`)
+      return
+    }
+    const presenter = new EndOfServiceReportFurtherInformationPresenter(endOfServiceReport, null)
+    const view = new EndOfServiceReportFurtherInformationView(presenter)
 
     res.render(...view.renderArgs)
   }
