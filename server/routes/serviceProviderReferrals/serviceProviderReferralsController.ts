@@ -147,6 +147,8 @@ export default class ServiceProviderReferralsController {
       sentReferral,
       serviceCategory,
       actionPlan,
+      // TODO we can maybe kill this
+      sentReferral.endOfServiceReport,
       serviceUser,
       actionPlanAppointments
     )

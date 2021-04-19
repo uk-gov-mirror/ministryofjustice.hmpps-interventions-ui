@@ -1,4 +1,10 @@
-import { ActionPlan, ActionPlanAppointment, SentReferral, ServiceCategory } from '../../services/interventionsService'
+import {
+  ActionPlan,
+  ActionPlanAppointment,
+  EndOfServiceReport,
+  SentReferral,
+  ServiceCategory,
+} from '../../services/interventionsService'
 import utils from '../../utils/utils'
 import ReferralOverviewPagePresenter, { ReferralOverviewPageSection } from '../shared/referralOverviewPagePresenter'
 import { DeliusServiceUser } from '../../services/communityApiService'
@@ -11,6 +17,7 @@ export default class InterventionProgressPresenter {
     private readonly referral: SentReferral,
     private readonly serviceCategory: ServiceCategory,
     private readonly actionPlan: ActionPlan | null,
+    private readonly endOfServiceReport: EndOfServiceReport | null,
     serviceUser: DeliusServiceUser,
     private readonly actionPlanAppointments: ActionPlanAppointment[]
   ) {
@@ -31,6 +38,7 @@ export default class InterventionProgressPresenter {
   readonly text = {
     title: utils.convertToTitleCase(this.serviceCategory.name),
     actionPlanStatus: this.actionPlanSubmitted ? 'Submitted' : 'Not submitted',
+    endOfServiceReportStatus: this.endOfServiceReportSubmitted ? 'Submitted' : 'Not submitted',
   }
 
   readonly actionPlanStatusStyle: 'active' | 'inactive' = this.actionPlanSubmitted ? 'active' : 'inactive'
@@ -66,5 +74,19 @@ export default class InterventionProgressPresenter {
           : `<a class="govuk-link" href="${editUrl}">Edit session details</a>`,
       }
     })
+  }
+
+  readonly createEndOfServiceReportFormAction = `/service-provider/referrals/${this.referral.id}/end-of-service-report`
+
+  readonly endOfServiceReportStatusStyle: 'active' | 'inactive' = this.endOfServiceReportSubmitted
+    ? 'active'
+    : 'inactive'
+
+  private get endOfServiceReportSubmitted() {
+    return this.endOfServiceReport !== null && this.endOfServiceReport.submittedAt !== null
+  }
+
+  get allowEndOfServiceReportCreation(): boolean {
+    return this.endOfServiceReport === null
   }
 }
