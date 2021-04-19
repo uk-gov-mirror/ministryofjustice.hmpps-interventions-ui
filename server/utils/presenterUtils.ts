@@ -36,6 +36,9 @@ interface TwelveHourTimeInputPresenter {
   partOfDay: PartOfDayInputPresenter
 }
 
+export type SortableTableHeaders = { text: string; sort: 'ascending' | 'descending' | 'none' }[]
+export type SortableTableRow = { text: string; sortValue: string | null; href: string | null }[]
+
 export default class PresenterUtils {
   constructor(private readonly userInputData: Record<string, unknown> | null = null) {}
 
