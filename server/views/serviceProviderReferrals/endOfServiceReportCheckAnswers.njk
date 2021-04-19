@@ -1,0 +1,46 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% extends "../partials/layout.njk" %}
+
+{% block pageTitle %}
+  HMPPS Interventions - GOV.UK
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">{{ presenter.text.title }}</h1>
+
+      <h2 class="govuk-heading-m">{{ presenter.text.subtitle }}</h2>
+
+      {{ govukSummaryList(interventionSummarySummaryListArgs) }}
+
+      {% for outcome in presenter.outcomes %}
+        <h3 class="govuk-heading-s">{{ outcome.title }}</h3>
+
+        {{ govukTag({ text: outcome.achievementLevelText, classes: achievementLevelTagClass(outcome.achievementLevelStyle) }) }}
+
+        <strong class="govuk-body">{{ outcome.subtitle }}</strong>
+
+        <p class="govuk-body">{{ outcome.description }}</p>
+
+        <p>
+        <a class="govuk-link" href="{{ outcome.changeHref }}">Change</a>
+        </p>
+      {% endfor %}
+
+      <h3 class="govuk-heading-s">Additional information</h3>
+
+      <p class="govuk-body">{{ presenter.furtherInformation.text }}</p>
+      <p>
+      <a class="govuk-link" href="{{ presenter.furtherInformation.changeHref }}">Change</a>
+      </p>
+
+      <form method="post" action="{{ presenter.formAction }}">
+        {{ govukButton({ text: "Submit the report" }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
