@@ -1,5 +1,6 @@
 import { DeliusServiceUser } from '../../services/communityApiService'
 import { ActionPlanAppointment } from '../../services/interventionsService'
+import DateUtils from '../../utils/dateUtils'
 import { SummaryListItem } from '../../utils/summaryList'
 import ServiceUserBannerPresenter from '../shared/serviceUserBannerPresenter'
 import PostSessionAttendanceFeedbackPresenter from './postSessionAttendanceFeedbackPresenter'
@@ -77,7 +78,16 @@ export default class PostSessionFeedbackCheckAnswersPresenter {
     }
   }
 
-  get sessionDetailsSummary(): SummaryListItem[] {
-    return this.attendancePresenter.sessionDetailsSummary
-  }
+  readonly sessionDetailsSummary: SummaryListItem[] = [
+    {
+      key: 'Date',
+      lines: [DateUtils.getDateStringFromDateTimeString(this.appointment.appointmentTime)],
+      isList: false,
+    },
+    {
+      key: 'Time',
+      lines: [DateUtils.getTimeStringFromDateTimeString(this.appointment.appointmentTime)],
+      isList: false,
+    },
+  ]
 }
