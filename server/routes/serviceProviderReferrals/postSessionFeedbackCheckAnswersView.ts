@@ -4,7 +4,9 @@ import PostSessionFeedbackCheckAnswersPresenter from './postSessionFeedbackCheck
 export default class PostSessionFeedbackCheckAnswersView {
   constructor(private readonly presenter: PostSessionFeedbackCheckAnswersPresenter) {}
 
-  private readonly summaryListArgs = ViewUtils.summaryListArgs(this.presenter.sessionDetailsSummary)
+  private readonly summaryListArgs = ViewUtils.summaryListArgs(
+    this.presenter.feedbackAnswersPresenter.sessionDetailsSummary
+  )
 
   get renderArgs(): [string, Record<string, unknown>] {
     return [
