@@ -929,3 +929,44 @@ describe('GET /service-provider/action-plan/:actionPlanId/appointment/:sessionNu
     })
   })
 })
+
+describe('GET /service-provider/action-plan/:actionPlanId/appointment/:sessionNumber/post-session-feedback', () => {
+  it('renders a page displaying feedback answers', async () => {
+    const referral = sentReferralFactory.assigned().build()
+    const submittedActionPlan = actionPlanFactory.submitted().build({ referralId: referral.id, numberOfSessions: 1 })
+    const serviceUser = deliusServiceUser.build()
+
+    interventionsService.getActionPlan.mockResolvedValue(submittedActionPlan)
+
+    const appointmentWithSubmittedFeedback = actionPlanAppointmentFactory.build({
+      sessionNumber: 1,
+      sessionFeedback: {
+        attendance: {
+          attended: 'yes',
+          additionalAttendanceInformation: 'They were early to the session',
+        },
+        behaviour: {
+          behaviourDescription: 'Alex was well-behaved',
+          notifyProbationPractitioner: false,
+        },
+        submitted: true,
+      },
+    })
+
+    communityApiService.getServiceUserByCRN.mockResolvedValue(serviceUser)
+    interventionsService.getActionPlan.mockResolvedValue(submittedActionPlan)
+    interventionsService.getSentReferral.mockResolvedValue(referral)
+    interventionsService.getActionPlanAppointment.mockResolvedValue(appointmentWithSubmittedFeedback)
+
+    await request(app)
+      .get(`/service-provider/action-plan/${submittedActionPlan.id}/appointment/1/post-session-feedback`)
+      .expect(200)
+      .expect(res => {
+        expect(res.text).toContain('View feedback')
+        expect(res.text).toContain('They were early to the session')
+        expect(res.text).toContain('Yes, they were on time')
+        expect(res.text).toContain('Alex was well-behaved')
+        expect(res.text).toContain('No')
+      })
+  })
+})
